@@ -1,10 +1,9 @@
 package com.dembee.springboot.springbootrestcrudemployee.rest;
 
-import com.dembee.springboot.springbootrestcrudemployee.dao.EmployeeDao;
 import com.dembee.springboot.springbootrestcrudemployee.entity.Employee;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.dembee.springboot.springbootrestcrudemployee.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -12,18 +11,35 @@ import java.util.List;
 @RequestMapping("/api")
 public class EmployeeRestController {
 
-    private EmployeeDao employeeDao;
+    private EmployeeService employeeService;
     //quick and dirty: inject employee dao
 
-    public EmployeeRestController(EmployeeDao theEmployeeDao){
-        employeeDao = theEmployeeDao;
+    @Autowired
+    public EmployeeRestController(EmployeeService theEmployeeService){
+        employeeService = theEmployeeService;
     }
 
     //expose "/employees"and return all employees
     @GetMapping("/employees")
     public List<Employee> findAll(){
-        return employeeDao.findAll();
+        return employeeService.findAll();
     }
 
+    //add mapping for GET /employees/{employeeId}
+    @GetMapping("/employees/{employeeId}")
+    public Employee getEmployee(@PathVariable int employeeId){
+        Employee theEmployee = employeeService.findById(employeeId);
+        if(theEmployee == null){
+            throw new RuntimeException("Уучлаарай, Ийм Ажилчны ID олдсонгүй " +employeeId);
+        }
+        return theEmployee;
+    }
+
+    @PostMapping("/employees")
+    public Employee addEmployee(@RequestBody Employee theEmpoloyee){
+        theEmpoloyee.setId(0);
+        Employee dbEmployee = employeeService.save(theEmpoloyee);
+        return dbEmployee;
+    }
 
 }

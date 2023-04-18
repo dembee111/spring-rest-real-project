@@ -1,10 +1,10 @@
-package com.dembee.springboot.springbootrestcrudemployee.dao;
+package com.dembee.springboot.springbootrestcrudemployee.service;
 
 import com.dembee.springboot.springbootrestcrudemployee.entity.Employee;
 
 import java.util.List;
 
-public interface EmployeeDao {
+public interface EmployeeService {
     List<Employee> findAll();
 
     Employee findById(int theId);
