@@ -1,42 +1,46 @@
 package com.dembee.springboot.springbootrestcrudemployee.service;
 
-import com.dembee.springboot.springbootrestcrudemployee.dao.EmployeeDao;
+import com.dembee.springboot.springbootrestcrudemployee.dao.EmployeeRepository;
 import com.dembee.springboot.springbootrestcrudemployee.entity.Employee;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
-    private EmployeeDao employeeDao;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeDao theEmployeeDao){
-        employeeDao = theEmployeeDao;
+    public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository){
+        employeeRepository = theEmployeeRepository;
     }
 
     @Override
     public List<Employee> findAll(){
-        return employeeDao.findAll();
+        return employeeRepository.findAll();
     }
 
     @Override
     public Employee findById(int theId) {
-        return employeeDao.findById(theId);
+        Optional <Employee> result = employeeRepository.findById(theId);
+        Employee theEmployee = null;
+        if(result.isPresent()){
+            theEmployee = result.get();
+        }else{
+            throw new RuntimeException("хайсан айди олдсонгүй" + theId);
+        }
+        return theEmployee;
     }
 
-    @Transactional
     @Override
     public Employee save(Employee theEmployee) {
-        return employeeDao.save(theEmployee);
+        return employeeRepository.save(theEmployee);
     }
-
-    @Transactional
     @Override
     public void deleteById(int theId) {
-        employeeDao.deleteById(theId);
+        employeeRepository.deleteById(theId);
     }
 
 }
