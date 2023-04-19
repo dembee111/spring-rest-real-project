@@ -47,4 +47,14 @@ public class EmployeeRestController {
         Employee dbEmployee = employeeService.save(theEmployee);
         return dbEmployee;
     }
+
+    @DeleteMapping("/employees/{employeeId}")
+    public String deleteEmployee(@PathVariable int employeeId){
+        Employee tempEmployee = employeeService.findById(employeeId);
+        if(tempEmployee == null){
+            throw new RuntimeException("Ажилны айди олдсонгүй" + employeeId);
+        }
+        employeeService.deleteById(employeeId);
+        return "Амжиллтай устгагдлаа " + employeeId;
+    }
 }
